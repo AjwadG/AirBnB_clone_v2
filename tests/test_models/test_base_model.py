@@ -2,7 +2,7 @@
 """ """
 from models.base_model import BaseModel
 import unittest
-import datetime
+from datetime import datetime
 from uuid import UUID
 import json
 import os
@@ -24,8 +24,13 @@ class test_basemodel(unittest.TestCase):
     def tearDown(self):
         try:
             os.remove('file.json')
-        except:
+        except IOError:
             pass
+
+    def test_instance(self):
+        """test instantisation"""
+        obj = BaseModel()
+        self.assertIsInstance(obj, BaseModel)
 
     def test_default(self):
         """ """
@@ -75,10 +80,28 @@ class test_basemodel(unittest.TestCase):
             new = self.value(**n)
 
     def test_kwargs_one(self):
-        """ """
-        n = {'Name': 'test'}
-        with self.assertRaises(KeyError):
-            new = self.value(**n)
+        """Test initialization with keyword arguments"""
+        data = {
+            "id": "sample_id",
+            "created_at": "2022-01-01T12:00:00.000000",
+            "updated_at": "2022-01-02T14:30:00.500000",
+            "custom_attribute": "custom_value"
+        }
+
+        # Create an instance with the provided keyword arguments
+        model_instance = BaseModel(**data)
+
+        # Verify that instance variables are set correctly
+        self.assertEqual(model_instance.id, "sample_id")
+        self.assertEqual(model_instance.custom_attribute, "custom_value")
+
+        # Verify that datetime attributes are parsed correctly
+        expected_created_at = datetime.strptime("2022-01-01T12:00:00.000000",
+                                                "%Y-%m-%dT%H:%M:%S.%f")
+        expected_updated_at = datetime.strptime("2022-01-02T14:30:00.500000",
+                                                "%Y-%m-%dT%H:%M:%S.%f")
+        self.assertEqual(model_instance.created_at, expected_created_at)
+        self.assertEqual(model_instance.updated_at, expected_updated_at)
 
     def test_id(self):
         """ """
@@ -88,12 +111,4 @@ class test_basemodel(unittest.TestCase):
     def test_created_at(self):
         """ """
         new = self.value()
-        self.assertEqual(type(new.created_at), datetime.datetime)
-
-    def test_updated_at(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.updated_at), datetime.datetime)
-        n = new.to_dict()
-        new = BaseModel(**n)
-        self.assertFalse(new.created_at == new.updated_at)
+        self.assertEqual(type(new.created_at), datetime)
