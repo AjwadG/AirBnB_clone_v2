@@ -1,7 +1,8 @@
 #!/usr/bin/python3
-""" do_deploy_web_static module """
+""" deploy_web_static module """
 from fabric.api import *
-from os.path import exists
+from os.path import exists, isdir
+from datetime import datetime
 env.hosts = ['100.26.215.136', '100.26.20.75']
 env.warn_only = True
 
@@ -47,3 +48,36 @@ def do_deploy(archive_path):
     if r.failed:
         return False
     return True
+
+
+@runs_once
+def do_pack():
+    """crates a tar file of content of web_static"""
+    n = datetime.now()
+    stamp = "{}{}{}{}{}{}".format(n.year, n.month, n.day,
+                                  n.hour, n.minute, n.second)
+    if not isdir("versions"):
+        local("mkdir versions")
+    path = "versions/web_static_{}.tgz".format(stamp)
+
+    code = local("tar -cvzf {} web_static".format(path)).succeeded
+
+    if code:
+        return (path)
+    else:
+        return None
+
+
+def deploy():
+    """
+        deploy joins do_deploy and do_pack tohether
+
+        Returns:
+            False if path in None
+            return the return of  do_deploy
+    """
+    path = do_pack()
+    if path is None:
+        return False
+    res = do_deploy(path)
+    return res
