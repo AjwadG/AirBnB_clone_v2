@@ -21,17 +21,33 @@ ln -sf /data/web_static/releases/test/ /data/web_static/current
 chown -R ubuntu:ubuntu /data
 
 # editing the config if not exists
-ok=$(< /etc/nginx/sites-available/default tr ' ' _ | grep hbnb_static | wc -c)
+echo "
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
 
-if [ "$ok" == "0" ]; then
+	add_header X-Served-By $HOSTNAME;
+        root /var/www/html;
 
-        sed -i "/server_name/a\
-        \\
-        location \/hbnb_static\/ {\n\
-                alias \/data\/web_static\/current\/;\n\
+        # Add index.php to the list if you are using PHP
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name ajwadg.tech;
+
+	error_page 404 /error_404.html;
+
+	location = /error_404.html {
+		root /var/www/html;
+		internal;
+	}
+        location /hbnb_static/ {
+                alias /data/web_static/current/;
         }
-        " /etc/nginx/sites-available/default
-fi
+
+        location /redirect_me {
+                return 301 https://www.nginx.com/blog/creating-nginx-rewrite-rules/;
+        }
+}" | sudo tee /etc/nginx/sites-available/default
 
 # restart
-service nginx restart
+sudo service nginx restart
