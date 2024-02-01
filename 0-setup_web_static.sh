@@ -16,6 +16,9 @@ echo "<h1>HI</h1>" > /data/web_static/releases/test/index.html
 # crating the link
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 
+name=$(hostname)
+echo "Hello World!" | sudo tee /var/www/html/index.html
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/error_404.html
 
 # chaningg owner and groub
 chown -R ubuntu:ubuntu /data
@@ -26,7 +29,7 @@ server {
         listen 80 default_server;
         listen [::]:80 default_server;
 
-	add_header X-Served-By $HOSTNAME;
+	add_header X-Served-By $name always;
         root /var/www/html;
 
         # Add index.php to the list if you are using PHP

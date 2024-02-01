@@ -3,7 +3,6 @@
 from fabric.api import *
 from os.path import exists
 env.hosts = ['100.26.215.136', '100.26.20.75']
-env.warn_only = True
 
 
 def do_deploy(archive_path):
@@ -14,11 +13,14 @@ def do_deploy(archive_path):
     Returns:
         False if fail or filr not exists otherwise True.
     """
-    if not exists(archive_path):
-        return False
+    try:
+        if not exists(archive_path):
+            return False
+    except:
+           return False
 
     sPath = archive_path.replace("versions", "/tmp")
-    r = put(archive_path, "/tmp/")
+    r = put(archive_path, sPath)
     if r.failed:
         return False
     fName = sPath.split('/')[-1].split('.')[0]
