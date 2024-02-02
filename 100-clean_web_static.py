@@ -23,7 +23,7 @@ def do_clean(number=0):
         tlist = run("ls -tr").split()
         flist = []
         for a in tlist:
-            if "web_static" in a:
+            if "test" != a:
                 flist.append(a)
         for i in range(number):
             flist.pop()

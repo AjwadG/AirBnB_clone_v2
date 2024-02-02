@@ -10,13 +10,17 @@ def do_pack():
     n = datetime.now()
     stamp = "{}{}{}{}{}{}".format(n.year, n.month, n.day,
                                   n.hour, n.minute, n.second)
-    if not isdir("versions"):
-        local("mkdir versions")
-    path = "versions/web_static_{}.tgz".format(stamp)
 
-    code = local("tar -cvzf {} web_static".format(path)).succeeded
+    try:
+        if not isdir("versions"):
+            local("mkdir versions")
+        path = "versions/web_static_{}.tgz".format(stamp)
 
-    if code:
-        return (path)
-    else:
+        code = local("tar -cvzf {} web_static".format(path)).succeeded
+
+        if code:
+            return (path)
+        else:
+            return None
+    except:
         return None

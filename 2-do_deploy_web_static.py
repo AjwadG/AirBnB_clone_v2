@@ -7,17 +7,13 @@ env.hosts = ['100.26.215.136', '100.26.20.75']
 
 def do_deploy(archive_path):
     """deply filr to server
-
     Args:
         archive_path: path of the file.
     Returns:
         False if fail or filr not exists otherwise True.
     """
-    try:
-        if not exists(archive_path):
-            return False
-    except:
-           return False
+    if not exists(archive_path):
+        return False
 
     sPath = archive_path.replace("versions", "/tmp")
     r = put(archive_path, sPath)
