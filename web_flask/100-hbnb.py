@@ -6,6 +6,8 @@
 from flask import Flask, render_template
 from models.state import State
 from models.amenity import Amenity
+from models.place import Place
+from models.user import User
 from models import storage
 
 app = Flask(__name__)
@@ -24,9 +26,18 @@ def hbnb():
         renders the first real full dynamic  page
     """
     states = storage.all(State).values()
+    for state in states:
+        if not hasattr(state, 'cities'):
+            setattr(state, 'cities', state.cities)
     amenities = storage.all(Amenity).values()
-    return render_template('10-hbnb_filters.html',
-                           states=states, amenities=amenities)
+    places = storage.all(Place).values()
+    users = storage.all(User)
+    for place in places:
+        owner = users["User.{}".format(place.user_id)]
+        setattr(place, "owner", "{} {}".format(owner.first_name,
+                                               owner.last_name))
+    return render_template('100-hbnb.html', states=states,
+                           amenities=amenities, places=places)
 
 
 if __name__ == "__main__":

@@ -64,6 +64,7 @@ div ul {
 	box-sizing: border-box;
 	position: absolute;
 	display: none;
+	z-index: 100;
 	top: 100%;
 	padding: 20px;
 	background-color: #FAFAFA;

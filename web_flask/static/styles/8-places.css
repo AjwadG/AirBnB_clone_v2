@@ -18,8 +18,9 @@
 	font-size: 30px;
 	margin: 0;
 	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
+	width: 73%;
+    overflow: hidden;
+    height: 70px;
 
 }
 .price_by_night {
