@@ -33,6 +33,8 @@ def states_cities(id):
         renders all states from storage
     """
     state = storage.all(State).get("State.{}".format(id))
+    if state is not None and not hasattr(state, 'cities'):
+        setattr(state, 'cities', state.cities)
     return render_template('9-states.html', state=state)
 
 

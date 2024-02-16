@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
-    9-states module
-    2 route renders a template with dynamic content
+    10-hbnb_filters module
+    1 route renders a template with dynamic content
 """
 from flask import Flask, render_template
 from models.state import State

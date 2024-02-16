@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 """
-    8-states_list module
+    100-hbnb module
     1 route renders a template with dynamic content
 """
 from flask import Flask, render_template
 from models.state import State
+from models.amenity import Amenity
 from models import storage
 
 app = Flask(__name__)
@@ -16,17 +17,16 @@ def teardown_storage(exception):
     storage.close()
 
 
-@app.route("/cities_by_states", strict_slashes=False)
-def cities_by_states():
+@app.route("/hbnb", strict_slashes=False)
+def hbnb():
     """
-        the cities_by_states route that
-        renders all states adn thir cities from storage
+        the hbnb_filters route that
+        renders the first real full dynamic  page
     """
     states = storage.all(State).values()
-    for state in states:
-        if not hasattr(state, 'cities'):
-            setattr(state, 'cities', state.cities)
-    return render_template('8-cities_by_states.html', states=states)
+    amenities = storage.all(Amenity).values()
+    return render_template('10-hbnb_filters.html',
+                           states=states, amenities=amenities)
 
 
 if __name__ == "__main__":
