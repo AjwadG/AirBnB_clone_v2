@@ -17,6 +17,7 @@ class BaseModel:
     """A base class for all hbnb models"""
 
     if getenv("HBNB_TYPE_STORAGE") == 'db':
+        __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'latin1'}
         id = Column(String(60), primary_key=True)
         created_at = Column(DATETIME, default=datetime.utcnow, nullable=False)
         updated_at = Column(DATETIME, default=datetime.utcnow, nullable=False)
