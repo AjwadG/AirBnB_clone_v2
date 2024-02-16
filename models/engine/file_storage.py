@@ -40,6 +40,10 @@ class FileStorage:
                 del self.__objects[key]
                 break
 
+    def close(self):
+        """ jsut calls reolde"""
+        self.reload()
+
     def reload(self):
         """Loads storage dictionary from file"""
         from models.base_model import BaseModel

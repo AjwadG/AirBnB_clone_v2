@@ -39,7 +39,8 @@ class DBStorage:
         ''' query on the current database session '''
         objs = {}
         if cls is not None:
-            for obj in self.__session.query(models[cls]):
+            cls = cls if type(cls) != str else models[cls]
+            for obj in self.__session.query(cls):
                 objs[obj.__class__.__name__ + '.' + obj.id] = obj
         else:
             for model in models:
@@ -59,6 +60,10 @@ class DBStorage:
         """ delete from the current database session """
         if obj is not None:
             self.__session.delete(obj)
+
+    def close(self):
+        """ removes the session """
+        self.__session.close()
 
     def reload(self):
         ''' create all tables in the database '''
